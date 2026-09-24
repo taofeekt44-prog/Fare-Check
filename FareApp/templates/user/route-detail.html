@@ -1,0 +1,298 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>
+        {{ route.origin }} → {{ route.destination }} | FareCheck Nigeria
+    </title>
+
+    <link rel="stylesheet" href="{% static 'css/route-detail.css' %}">
+
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+
+<body>
+
+<div class="page-container">
+
+    <a href="{% url 'user_dashboard' %}" class="back-btn">
+        ← Back to Dashboard
+    </a>
+
+    <section class="route-header">
+
+        <p class="small-title">ROUTE DETAILS</p>
+
+        <h1>
+            {{ route.origin }}
+            <span>→</span>
+            {{ route.destination }}
+        </h1>
+
+        <p class="route-description">
+            Recent transport fares reported by FareCheck contributors.
+        </p>
+
+    </section>
+
+
+    <section class="stats-grid">
+
+        <div class="stat-card">
+            <p>Minimum Fare</p>
+            <h2>₦{{ minimum|default:"0.00" }}</h2>
+        </div>
+
+        <div class="stat-card">
+            <p>Maximum Fare</p>
+            <h2>₦{{ maximum|default:"0.00" }}</h2>
+        </div>
+
+        <div class="stat-card">
+            <p>Average Fare</p>
+            <h2>₦{{ average|default:"0.00" }}</h2>
+        </div>
+
+    </section>
+
+
+    <section class="filter-section">
+
+        <div>
+            <h2>Filter Fares</h2>
+
+            <p>
+                Choose a transport type or view only today's reports.
+            </p>
+        </div>
+
+        <form method="GET" class="filter-form">
+
+            <div class="filter-group">
+
+                <label for="transport">
+                    Transport Type
+                </label>
+
+                <select name="transport" id="transport">
+
+                    <option value=""
+                        {% if not selected_transport %}
+                            selected
+                        {% endif %}>
+                        All Transport
+                    </option>
+
+                    <option value="BUS"
+                        {% if selected_transport == "BUS" %}
+                            selected
+                        {% endif %}>
+                        Bus
+                    </option>
+
+                    <option value="KEKE"
+                        {% if selected_transport == "KEKE" %}
+                            selected
+                        {% endif %}>
+                        Keke
+                    </option>
+
+                    <option value="TAXI"
+                        {% if selected_transport == "TAXI" %}
+                            selected
+                        {% endif %}>
+                        Taxi
+                    </option>
+
+                </select>
+
+            </div>
+
+
+            <div class="today-filter">
+
+                <label>
+
+                    <input
+                        type="checkbox"
+                        name="today"
+                        value="1"
+                        {% if today_selected %}
+                            checked
+                        {% endif %}
+                    >
+
+                    Today only
+
+                </label>
+
+            </div>
+
+
+            <button type="submit" class="filter-btn">
+                Apply Filter
+            </button>
+
+        </form>
+
+    </section>
+
+
+    <section class="recent-section">
+
+        <div class="section-heading">
+
+            <div>
+
+                <h2>Recent Fares</h2>
+
+                <p>
+                    Latest fare reports for this route.
+                </p>
+
+            </div>
+
+        </div>
+
+
+        {% if fares %}
+
+            <div class="fare-list">
+
+                {% for fare in fares %}
+
+                    <div class="fare-card">
+
+                        <div class="fare-main">
+
+                            <h3>
+                                ₦{{ fare.amount }}
+                            </h3>
+
+                            <span class="transport-badge">
+                                {{ fare.get_transport_type_display }}
+                            </span>
+
+                        </div>
+
+
+                        <div class="fare-info">
+
+                            <p>
+                                <strong>Submitted by:</strong>
+                                {{ fare.user.username }}
+                            </p>
+
+                            {% if fare.time_of_day %}
+
+                                <p>
+                                    <strong>Time:</strong>
+                                    {{ fare.get_time_of_day_display }}
+                                </p>
+
+                            {% endif %}
+
+                            <p>
+                                <strong>Date:</strong>
+                                {{ fare.created_at|date:"d M Y" }}
+                            </p>
+
+                            <p>
+                                <strong>Submitted:</strong>
+                                {{ fare.created_at|date:"h:i A" }}
+                            </p>
+
+                        </div>
+
+
+                        <div class="fare-actions">
+
+                            <a
+                                href="{% url 'flag_fare' fare.id %}"
+                                class="flag-btn"
+                            >
+                                🚩 Flag
+                            </a>
+
+                        </div>
+
+                    </div>
+
+                {% endfor %}
+
+            </div>
+
+        {% else %}
+
+            <div class="empty-state">
+
+                <div class="empty-icon">
+                    🚍
+                </div>
+
+                <h3>No fare reports found</h3>
+
+                <p>
+                    There are no fare submissions matching
+                    your current filters.
+                </p>
+
+            </div>
+
+        {% endif %}
+
+    </section>
+
+
+    <section class="chart-section">
+
+        <div class="section-heading">
+
+            <div>
+
+                <p class="small-title">
+                    FARE TREND
+                </p>
+
+                <h2>
+                    7-Day Fare Trend
+                </h2>
+
+                <p>
+                    Average reported fare for each of the last 7 days.
+                </p>
+
+            </div>
+
+        </div>
+
+
+        <div class="chart-container">
+
+            <canvas id="fareTrendChart"></canvas>
+
+        </div>
+
+    </section>
+
+</div>
+
+
+<!-- Django sends the chart data to JavaScript -->
+
+{{ chart_labels|json_script:"chart-labels" }}
+
+{{ chart_data|json_script:"chart-data" }}
+
+
+<!-- Your external JavaScript -->
+
+<script src="{% static 'js/chart.js' %}"></script>
+
+</body>
+</html>

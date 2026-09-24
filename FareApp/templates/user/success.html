@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Flag Submitted | FareCheck Nigeria</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/flag-status.css' %}">
+</head>
+
+<body>
+
+    <main class="status-page">
+
+        <div class="status-card">
+
+            <div class="status-icon success">
+                ✓
+            </div>
+
+            <span class="status-label">FLAG SUBMITTED</span>
+
+            <h1>Thank You for Reporting</h1>
+
+            <p>
+                Your report has been submitted successfully.
+                Our team will review the fare you flagged.
+            </p>
+
+            <a href="{% url 'user_dashboard' %}" class="status-btn">
+                Back to Dashboard
+            </a>
+
+            <a href="{% url 'all_fares' %}" class="secondary-btn">
+                View Fares
+            </a>
+
+        </div>
+
+    </main>
+
+</body>
+</html>

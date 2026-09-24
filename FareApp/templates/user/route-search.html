@@ -1,0 +1,124 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Search Routes | FareCheck Nigeria</title>
+    <link rel="stylesheet" href="{% static 'css/route-search.css' %}">
+</head>
+<body>
+<div class="page-container">
+    <header class="navbar">
+        <a href="#" class="logo">
+            <span class="logo-icon">₦</span>
+            <span>Fare<span>Check</span></span>
+        </a>
+        <nav class="nav-links">
+            <a href="{% url 'user_dashboard' %}">Home</a>
+            <a href="{% url 'user_search' %}" class="active">Search Fares</a>
+            <a href="{% url 'user_fare' %}">My Fares</a>
+            <a href="{% url "profile" %}">Profile</a>
+            <a href="{% url 'user_logout' %}">Logout</a>
+        </nav>
+
+        <button class="mobile-menu-btn"id="mobileMenuBtn"type="button">☰</button>
+    </header>
+
+    <div class="mobile-menu" id="mobileMenu">
+        <a href="{% url 'user_dashboard' %}">Home</a>
+        <a href="{% url 'user_search' %}" class="active">Search Fares</a>
+        <a href="{% url 'user_fare' %}">My Fares</a>
+        <a href="{% url "profile" %}">Profile</a>
+        <a href="{% url 'user_logout' %}">Logout</a>
+    </div>
+    <section class="search-header">
+        <div>
+            <p class="eyebrow">FARE SEARCH</p>
+            <h1>Find a route</h1>
+            <p class="subtitle">Search for a route to see recent transport fares reported by commuters.</p>
+        </div>
+    </section>
+
+    <section class="route-search-box">
+        <div class="search-box-header">
+            <p class="eyebrow">SEARCH ROUTE</p>
+            <h2>Where are you travelling?</h2>
+        </div>
+
+        <form method="GET" action="">
+            <div class="search-fields">
+                <div class="search-field">
+                    <label for="origin">From</label>
+                    <input type="text"id="origin"name="origin"placeholder="e.g. Lagos"value="{{ request.GET.origin }}"required>
+                </div>
+                <button type="button"class="swap-button"id="swapButton">⇄</button>
+
+                <div class="search-field">
+                    <label for="destination">To</label>
+                    <input type="text"id="destination"name="destination"placeholder="e.g. Ibadan"value="{{ request.GET.destination }}"required>
+                </div>
+
+                <button type="submit"class="search-button">Search Route →</button>
+            </div>
+        </form>
+    </section>
+
+    <main class="results-section">
+        {% if request.GET.origin or request.GET.destination %}
+            <div class="results-heading">
+                <div>
+                    <p class="eyebrow">SEARCH RESULTS</p>
+                    <h2>Available routes</h2>
+                </div>
+
+                <span class="result-count">
+                    {{ routes|length }} route{{ routes|length|pluralize }} found
+                </span>
+            </div>
+
+            {% if routes %}
+                <div class="route-list">
+                    {% for route in routes %}
+                        <article class="route-result-card">
+                            <div class="route-icon">🚌</div>
+                            <div class="route-information">
+                                <p class="route-label">ROUTE</p>
+                                <h3>
+                                    {{ route.origin }}
+                                    <span>→</span>
+                                    {{ route.destination }}
+                                </h3>
+
+                                <p class="route-description">Recent fare reports are available for this route.</p>
+                            </div>
+
+                            <div class="route-action">
+
+                                <a href="{% url 'route_detail' route.id %}"class="view-details-btn">View Route Details →</a>
+                            </div>
+                        </article>
+                    {% endfor %}
+                </div>
+            {% else %}
+
+                <div class="no-results">
+                    <div class="no-results-icon">🔎</div>
+                    <h3>No route found</h3>
+                    <p>We couldn't find this route in FareCheck yet.Try checking the spelling or search for another route.</p>
+                </div>
+            {% endif %}
+        {% else %}
+
+            <div class="search-message">
+                <div class="search-message-icon">🗺️</div>
+                <h3>Search for a route</h3>
+                <p>Enter your starting location and destination above to find available routes.</p>
+            </div>
+        {% endif %}
+    </main>
+</div>
+<script src="{% static 'js/route-search.js' %}"></script>
+</body>
+</html>

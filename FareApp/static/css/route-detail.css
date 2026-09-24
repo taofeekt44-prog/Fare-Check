@@ -1,0 +1,390 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+:root {
+    --bg: #071416;
+    --bg-secondary: #0b1d20;
+    --card: #0d2428;
+    --card-hover: #123036;
+    --primary: #20e0c2;
+    --primary-dark: #16bca3;
+    --text: #ffffff;
+    --muted: #8ca5a8;
+    --border: rgba(255, 255, 255, 0.08);
+    --danger: #ff7272;
+}
+
+body {
+    font-family: Arial, Helvetica, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+}
+
+.page-container {
+    width: min(1200px, 92%);
+    margin: auto;
+    padding: 35px 0 70px;
+}
+
+
+/* Back button */
+
+.back-btn {
+    display: inline-block;
+    color: var(--muted);
+    text-decoration: none;
+    margin-bottom: 30px;
+    transition: 0.2s;
+}
+
+.back-btn:hover {
+    color: var(--primary);
+}
+
+
+/* Route Header */
+
+.route-header {
+    margin-bottom: 30px;
+}
+
+.small-title {
+    color: var(--primary);
+    font-size: 12px;
+    font-weight: bold;
+    letter-spacing: 1.5px;
+    margin-bottom: 10px;
+}
+
+.route-header h1 {
+    font-size: clamp(28px, 5vw, 48px);
+    margin-bottom: 12px;
+}
+
+.route-header h1 span {
+    color: var(--primary);
+    margin: 0 10px;
+}
+
+.route-description {
+    color: var(--muted);
+    font-size: 16px;
+}
+
+
+/* Statistics */
+
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 18px;
+    margin-bottom: 30px;
+}
+
+.stat-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 25px;
+}
+
+.stat-card p {
+    color: var(--muted);
+    margin-bottom: 12px;
+}
+
+.stat-card h2 {
+    font-size: 30px;
+    color: var(--primary);
+}
+
+
+/* Filter */
+
+.filter-section {
+    background: var(--bg-secondary);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 25px;
+    margin-bottom: 30px;
+}
+
+.filter-section h2 {
+    margin-bottom: 6px;
+}
+
+.filter-section > div > p {
+    color: var(--muted);
+    margin-bottom: 20px;
+}
+
+.filter-form {
+    display: flex;
+    align-items: end;
+    gap: 15px;
+    flex-wrap: wrap;
+}
+
+.filter-group {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.filter-group label {
+    color: var(--muted);
+    font-size: 14px;
+}
+
+.filter-group select {
+    min-width: 190px;
+    padding: 12px 14px;
+    border-radius: 10px;
+    border: 1px solid var(--border);
+    background: var(--card);
+    color: var(--text);
+    outline: none;
+}
+
+.filter-group select:focus {
+    border-color: var(--primary);
+}
+
+.today-filter {
+    display: flex;
+    align-items: center;
+    height: 44px;
+}
+
+.today-filter label {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    color: var(--muted);
+    cursor: pointer;
+}
+
+.today-filter input {
+    width: 17px;
+    height: 17px;
+    accent-color: var(--primary);
+}
+
+.filter-btn {
+    padding: 12px 22px;
+    border: none;
+    border-radius: 10px;
+    background: var(--primary);
+    color: #03100e;
+    font-weight: bold;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.filter-btn:hover {
+    background: var(--primary-dark);
+}
+
+
+/* Section headings */
+
+.section-heading {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.section-heading h2 {
+    margin-bottom: 7px;
+}
+
+.section-heading p:not(.small-title) {
+    color: var(--muted);
+}
+
+
+/* Recent fares */
+
+.recent-section {
+    margin-bottom: 35px;
+}
+
+.fare-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.fare-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+    transition: 0.2s;
+}
+
+.fare-card:hover {
+    background: var(--card-hover);
+}
+
+.fare-main {
+    min-width: 130px;
+}
+
+.fare-main h3 {
+    font-size: 25px;
+    margin-bottom: 8px;
+}
+
+.transport-badge {
+    display: inline-block;
+    padding: 5px 9px;
+    background: rgba(32, 224, 194, 0.1);
+    color: var(--primary);
+    border-radius: 6px;
+    font-size: 12px;
+    font-weight: bold;
+}
+
+.fare-info {
+    flex: 1;
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
+}
+
+.fare-info p {
+    color: var(--muted);
+    font-size: 13px;
+}
+
+.fare-info strong {
+    color: var(--text);
+}
+
+.flag-btn {
+    color: var(--danger);
+    text-decoration: none;
+    border: 1px solid rgba(255, 114, 114, 0.2);
+    padding: 8px 12px;
+    border-radius: 8px;
+    font-size: 13px;
+}
+
+.flag-btn:hover {
+    background: rgba(255, 114, 114, 0.1);
+}
+
+
+/* Empty */
+
+.empty-state {
+    text-align: center;
+    padding: 50px 20px;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+}
+
+.empty-icon {
+    font-size: 40px;
+    margin-bottom: 15px;
+}
+
+.empty-state h3 {
+    margin-bottom: 8px;
+}
+
+.empty-state p {
+    color: var(--muted);
+}
+
+
+/* Chart */
+
+.chart-section {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 25px;
+}
+
+.chart-container {
+    position: relative;
+    height: 350px;
+    width: 100%;
+}
+
+
+/* Mobile */
+
+@media (max-width: 800px) {
+
+    .stats-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .fare-card {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+
+    .fare-info {
+        flex-direction: column;
+        gap: 8px;
+    }
+
+    .fare-actions {
+        width: 100%;
+    }
+
+    .flag-btn {
+        display: inline-block;
+    }
+
+}
+
+
+@media (max-width: 500px) {
+
+    .page-container {
+        width: 94%;
+        padding-top: 20px;
+    }
+
+    .route-header h1 {
+        font-size: 30px;
+    }
+
+    .filter-form {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .filter-group select {
+        width: 100%;
+    }
+
+    .filter-btn {
+        width: 100%;
+    }
+
+    .chart-section,
+    .filter-section {
+        padding: 18px;
+    }
+
+    .chart-container {
+        height: 280px;
+    }
+
+}

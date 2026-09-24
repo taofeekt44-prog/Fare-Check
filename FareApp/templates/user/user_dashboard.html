@@ -1,0 +1,176 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"> 
+    <title>FareCheck | Dashboard</title>
+    <link rel="stylesheet" href="{% static 'css/dashboard.css' %}">
+</head>
+<body>
+    <header class="navbar">
+        <div class="logo">
+            <span class="logo-icon">₦</span>
+            <span>Fare<span>Check</span></span>
+        </div>
+        <nav class="nav-links">
+            <a href="#" class="active">Home</a>
+            <a href="{% url "user_search" %}">Search Fares</a>
+            <a href="{% url "user_fare" %}">My Fares</a>
+            <a href="{% url "profile" %}">Profile</a>
+        </nav>
+
+        <div class="nav-right">
+
+            <div class="user-mini">
+            <div class="user-avatar">
+            {% if request.user.profile.profile_picture %}
+                <img src="{{ request.user.profile.profile_picture.url }}"alt="Profile picture">
+            {% else %}
+
+            <div class="user-info">
+                {{ request.user.username|first|upper }}
+            </div>
+
+            {% endif %}
+            </div>
+
+                <div class="user-info">
+                <strong>
+                    {% if request.user.is_authenticated %}
+                    {{ request.user.username }}
+                    {% endif %}
+                </strong>
+                    <small>Contributor</small>
+                </div>
+            </div>
+            <a href="{% url "user_logout" %}" class="logout-btn">Logout</a>
+        </div>
+        <button class="menu-btn" id="menuBtn">☰</button>
+    </header>
+
+    <div class="mobile-menu" id="mobileMenu">
+           <a href="{% url 'user_dashboard' %}">Home</a>
+            <a href="{% url 'user_search' %}">Search Fares</a>
+            <a href="{% url 'user_fare' %}" class="active">My Fares</a>
+            <a href="{% url "profile" %}">Profile</a>
+            <a href="{% url 'user_logout' %}">Logout</a>
+    </div>
+
+    <main class="dashboard">
+        <section class="hero">
+            <div class="hero-content">
+                <div class="welcome-badge">
+                    <span></span>
+                    Fare information from real commuters
+                </div>
+                <h1>Know the fare.<br><span>Before you travel.</span></h1>
+                <p>Search recent transport fares across Nigerian routesand know what commuters are actually paying.</p>
+            </div>
+        </section>
+
+        <section class="search-section">
+            <div class="search-header">
+                <div>
+                    <span class="section-label">FIND A ROUTE</span>
+                    <h2>What route are you travelling?</h2>
+                    <p>Search for recent fares between two locations.</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="quick-section">
+            <div class="section-heading">
+                <div>
+                    <span class="section-label">QUICK ACTIONS</span>
+                    <h2>Help other commuters</h2>
+                </div>
+            </div>
+
+            <div class="action-grid">
+                <a href="{% url "submit-fare" %}" class="action-card submit-card">
+                    <div class="action-icon">
+                        +
+                    </div>
+                    <div class="action-content">
+                        <h3>Submit a Fare</h3>
+                        <p>Tell other commuters how much you paidfor your trip.</p>
+                        <span class="action-link">Submit fare →</span>
+                    </div>
+                </a>
+
+                <a href="{% url "user_fare" %}" class="action-card fares-card">
+                    <div class="action-icon">
+                        ◷
+                    </div>
+                    <div class="action-content">
+                        <h3>My Fares</h3>
+                        <p>View and manage the fares you have contributed.</p>
+                        <span class="action-link">View submissions →</span>
+                    </div>
+                </a>
+            </div>
+        </section>
+    {% if fares %}
+        <section class="routes-section">
+            <div class="section-heading">
+                <div>
+                    <span class="section-label">RECENT ROUTES</span>
+                    <h2>What people are paying</h2>
+                </div>
+                <a href="{% url "all_fares" %}" class="view-all">View all →</a>
+            </div>
+            {% for fare in fares %}
+            <div class="route-list">
+                <a href="{% url "route_detail" fare.route.id %}" class="route-card">
+                    <div class="route-left">
+                        <div class="route-icon">
+                            🚌
+                        </div>
+                        <div>
+                            
+                            <div class="route-name">
+                                <strong>
+                                    {{ fare.route.origin }}
+                                </strong>
+                                <span>→</span>
+                                <strong>{{ fare.route.destination}}</strong>
+                            </div>
+                            <p>{{ fare.get_transport_type_display}} updated {{ fare.created_at }}</p>
+                        </div>
+                    </div>
+                    <div class="route-price">
+                        <small>Recent range</small>
+                        <strong>{{ fare.amount }}</strong>
+                    </div>
+                    <span class="route-arrow">→</span>
+                </a>
+            </div>
+            {% endfor %}
+        </section>
+    {% endif %}     
+        <section class="contributor-card">
+            <div class="contributor-icon">
+                ✦
+            </div>
+            <div>
+                <span class="section-label">COMMUNITY</span>
+                <h2>Every fare makes the tracker better.</h2>
+                <p>Share the fare you paid and help other commuters know what to expect before they travel.</p>
+            </div>
+            <a href="{% url "submit-fare" %}" class="contribute-btn">Submit a fare →</a>
+        </section>
+    </main>
+
+    <footer>
+        <div class="footer-logo">
+            Fare<span>Check</span>
+        </div>
+
+        <p>Crowd-sourced transport fare information for Nigeria.</p>
+        <p class="copyright">© 2026 FareCheck. Built for Nigerian commuters.</p>
+    </footer>
+    <script src="{% static 'js/dashboard.js' %}"></script>
+</body>
+</html>

@@ -1,0 +1,157 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Profile | FareCheck Nigeria</title>
+    <link rel="stylesheet" href="{% static 'css/profile.css' %}">
+</head>
+<body>
+    <main class="profile-page">
+        <div class="profile-container">
+            <a href="{% url 'user_dashboard' %}" class="back-dashboard-btn">
+                <span>←</span>
+                Back to Dashboard
+            </a>
+            <section class="profile-card">
+                <div class="profile-top">
+                    <div class="profile-picture-container">
+                        {% if profile.profile_picture %}
+                            <img
+                                src="{{ profile.profile_picture.url }}"
+                                alt="Profile picture"
+                                class="profile-picture"
+                            >
+                        {% else %}
+                            <div class="profile-placeholder">
+                                {{ user.username|first|upper }}
+                            </div>
+                        {% endif %}
+                    </div>
+
+                    <div class="profile-main-info">
+                        <span class="profile-label">FARECHECK CONTRIBUTOR</span>
+                        <h1>
+                            {% if user.first_name or user.last_name %}
+                                {{ user.first_name }} {{ user.last_name }}
+                            {% else %}
+                                {{ user.username }}
+                            {% endif %}
+                        </h1>
+                        <p class="username">
+                            @{{ user.username }}
+                        </p>
+                        {% if profile.bio %}
+                            <p class="profile-bio">
+                                {{ profile.bio }}
+                            </p>
+                        {% endif %}
+                    </div>
+                    <div class="profile-action">
+                        <a href="{% url 'edit_profile' %}"class="edit-profile-btn">Edit Profile</a>
+                    </div>
+                </div>
+
+                <div class="profile-details">
+                    <div class="profile-detail">
+                        <span class="detail-label">Email</span>
+                        <strong>
+                            {{ user.email }}
+                        </strong>
+                    </div>
+                    <div class="profile-detail">
+                        <span class="detail-label">Date Joined</span>
+                        <strong>
+                            {{ user.date_joined|date:"d M Y" }}
+                        </strong>
+                    </div>
+                    {% if profile.phone_number %}
+                        <div class="profile-detail">
+                            <span class="detail-label">Phone</span>
+                            <strong>
+                                {{ profile.phone_number }}
+                            </strong>
+                        </div>
+                    {% endif %}
+                </div>
+            </section>
+
+            <section class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-icon">₦</div>
+                    <div>
+                        <span>Total Fares</span>
+                        <strong>
+                            {{ total_fares }}
+                        </strong>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">✓</div>
+                    <div>
+                        <span>Contributor Since</span>
+                        <strong>
+                            {{ user.date_joined|date:"M Y" }}
+                        </strong>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">🚍</div>
+                    <div>
+                        <span>Community Reports</span>
+                        <strong>
+                            {{ total_fares }}
+                        </strong>
+                    </div>
+                </div>
+            </section>
+
+            <section class="activity-card">
+                <div class="section-heading">
+                    <div>
+                        <span class="section-label">CONTRIBUTOR ACTIVITY</span>
+                        <h2>Recent Fare Submissions</h2>
+                    </div>
+                    <a href="{% url 'user_fare' %}"class="view-all">View all →</a>
+                </div>
+                {% if fares %}
+                    <div class="fare-list">
+                        {% for fare in fares %}
+                            <a href="{% url 'route_detail' fare.route.id %}"class="fare-item">
+                                <div class="fare-route">
+                                    <h3>
+                                        {{ fare.route.origin }}
+                                        <span>→</span>
+                                        {{ fare.route.destination }}
+                                    </h3>
+                                    <p>
+                                        {{ fare.get_transport_type_display }}
+                                    </p>
+                                </div>
+
+                                <div class="fare-amount">
+                                    <strong>
+                                        ₦{{ fare.amount|floatformat:2 }}
+                                    </strong>
+                                    <span>
+                                        {{ fare.created_at|date:"d M Y" }}
+                                    </span>
+                                </div>
+                            </a>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    <div class="empty-state">
+                        <div class="empty-icon">₦</div>
+                        <h3>No fare submissions yet</h3>
+                        <p>Your fare contributions will appear here.</p>
+                        <a href="{% url 'submit-fare' %}"class="submit-fare-btn">Submit Your First Fare</a>
+                    </div>
+                {% endif %}
+            </section>
+        </div>
+    </main>
+    <script src="{% static 'js/profile.js' %}"></script>
+</body>
+</html>

@@ -1,0 +1,172 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Submit Fare | FareCheck Nigeria</title>
+    <link rel="stylesheet" href="{% static 'css/submit-fare.css' %}">
+</head>
+<body>
+<div class="page-container">
+    <header class="navbar">
+        <a href="#" class="logo">
+            <span class="logo-icon">₦</span>
+            <span>Fare<span>Check</span></span>
+        </a>
+        <nav class="nav-links">
+            <a href="{% url 'user_dashboard' %}">Home</a>
+            <a href="{% url 'user_search' %}">Search Fares</a>
+            <a href="#" class="active">Submit Fare</a>
+            <a href="{% url "user_fare" %}">My Fares</a>
+            <a href="#">Profile</a>
+            <a href="{% url 'user_logout' %}">Logout</a>
+        </nav>
+        <button
+            class="mobile-menu-btn"
+            id="mobileMenuBtn"
+            type="button"
+            aria-label="Open menu"
+        >
+            ☰
+        </button>
+    </header>
+
+    <div class="mobile-menu" id="mobileMenu">
+        <a href="{% url 'user_dashboard' %}">Home</a>
+        <a href="{% url 'user_search' %}">Search Fares</a>
+        <a href="#" class="active">Submit Fare</a>
+        <a href="{% url "user_fare" %}">My Fares</a>
+        <a href="#">Profile</a>
+        <a href="{% url 'user_logout' %}">Logout</a>
+    </div>
+
+    <section class="page-header">
+        <p class="eyebrow">COMMUNITY CONTRIBUTION</p>
+        <h1>Submit a fare</h1>
+        <p class="subtitle">Tell the community what you paid for your recent trip and help commuters understand current transport prices.</p>
+    </section>
+
+
+    <main class="form-wrapper">
+        <form method="POST"action=""id="fareForm"class="fare-form">
+            {% csrf_token %}
+            <section class="form-section">
+                <div class="section-heading">
+                    <span class="section-number">01</span>
+                    <div>
+                        <p class="section-label">YOUR ROUTE</p>
+                        <h2>Where did you travel?</h2>
+                    </div>
+                </div>
+                <div class="route-fields">
+                    <div class="input-group">
+                        <label for="origin">From</label>
+                        <input type="text"id="origin"name="origin"placeholder="e.g. Lagos"autocomplete="address-level2"required>
+                        <small class="field-error" id="originError"></small>
+                    </div>
+                    <div class="route-arrow">
+                        →
+                    </div>
+
+                    <div class="input-group">
+                        <label for="destination">To</label>
+                        <input type="text"id="destination"name="destination"placeholder="e.g. Ibadan"autocomplete="address-level2"required>
+                        <small class="field-error" id="destinationError"></small>
+                    </div>
+                </div>
+            </section>
+
+            <section class="form-section">
+                <div class="section-heading">
+                    <span class="section-number">02</span>
+                    <div>
+                        <p class="section-label">TRANSPORT TYPE</p>
+                        <h2>What did you use?</h2>
+                    </div>
+                </div>
+
+                <div class="transport-options">
+                    <label class="transport-card">
+                        <input type="radio"name="transport_type"value="BUS"required>
+                        <span class="transport-icon">🚌</span>
+                        <span class="transport-name">Bus</span>
+                        <span class="check-mark">✓</span>
+                    </label>
+                    <label class="transport-card">
+                        <input type="radio"name="transport_type"value="KEKE">
+                        <span class="transport-icon">🛺</span>
+                        <span class="transport-name">Keke</span>
+                        <span class="check-mark">✓</span>
+                    </label>
+                    <label class="transport-card">
+                        <input type="radio"name="transport_type"value="TAXI">
+                        <span class="transport-icon">🚕</span>
+                        <span class="transport-name">Taxi</span>
+                        <span class="check-mark">✓</span>
+                    </label>
+                </div>
+                <small class="field-error" id="transportError"></small>
+            </section>
+
+            <section class="form-section">
+                <div class="section-heading">
+                    <span class="section-number">03</span>
+                    <div>
+                        <p class="section-label">FARE PAID</p>
+                        <h2>How much did you pay?</h2>
+                    </div>
+                </div>
+
+                <div class="amount-wrapper">
+                    <span class="currency">₦</span>
+                    <input type="number"id="amount"name="amount"placeholder="0"min="1"step="0.01"inputmode="decimal"required>
+                </div>
+                <p class="input-help">Enter the amount you actually paid for the trip.</p>
+                <small class="field-error" id="amountError"></small>
+            </section>
+
+            <section class="form-section">
+                <div class="section-heading">
+                    <span class="section-number">04</span>
+                    <div>
+                        <p class="section-label">TIME OF DAY</p>
+                        <h2>When did you travel?</h2>
+                    </div>
+                </div>
+
+                <div class="input-group">
+                    <label for="time_of_day">Time of day<span class="optional">Optional</span></label>
+                    <select name="time_of_day"id="time_of_day">
+                        <option value="">Select time of day</option>
+                        <option value="MORNING">Morning</option>
+                        <option value="AFTERNOON">Afternoon</option>
+                        <option value="EVENING">Evening</option>
+                        <option value="NIGHT">Night</option>
+                    </select>
+                </div>
+            </section>
+
+
+            <div class="info-box">
+                <div class="info-icon">✓</div>
+                <div>
+                    <strong>Your contribution matters</strong>
+                    <p>Your fare will help other commutersunderstand current prices for this route.</p>
+                </div>
+            </div>
+
+            <div class="form-message error-message"id="formError"></div>
+
+            <button type="submit"class="submit-button"id="submitButton">
+                <span id="submitText">Submit Fare →</span>
+                <span id="submitLoading"class="submit-loading">Submitting...</span>
+            </button>
+            <p class="privacy-note">Only fare information is shared with the FareCheckcommunity. Your submission is linked to your account.</p>
+        </form>
+    </main>
+</div>
+<script src="{% static 'js/submit-fare.js' %}"></script>
+</body>
+</html>

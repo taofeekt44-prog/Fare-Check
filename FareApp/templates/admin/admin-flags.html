@@ -1,0 +1,84 @@
+{% extends "admin/admin-base.html" %}
+{% block title %}
+Flagged Fares | FareCheck Nigeria
+{% endblock %}
+{% block flags_active %}
+active
+{% endblock %}
+{% block content %}
+<div class="page-header">
+    <div>
+        <span class="page-eyebrow">MODERATION</span>
+        <h1>Flagged Fares</h1>
+        <p>Review fare reports submitted by commuters.</p>
+    </div>
+</div>
+<div class="filter-bar">
+    <div class="filter-title">
+        <span>⚑</span>
+        Fare reports
+    </div>
+</div>
+<div class="table-card">
+{% if flags %}
+<div class="table-wrapper">
+<table>
+<thead>
+<tr>
+    <th>Route</th>
+    <th>Fare</th>
+    <th>Transport</th>
+    <th>Reported by</th>
+    <th>Reason</th>
+    <th>Status</th>
+    <th></th>
+</tr>
+</thead>
+<tbody>
+{% for flag in flags %}
+<tr>
+<td>
+    <strong>
+        {{ flag.fare_submission.route.origin }}
+    </strong>
+
+    <span class="table-sub">
+        → {{ flag.fare_submission.route.destination }}
+    </span>
+</td>
+<td>
+    ₦{{ flag.fare_submission.amount|floatformat:2 }}
+</td>
+<td>
+    {{ flag.fare_submission.get_transport_type_display }}
+</td>
+<td>
+    {{ flag.user.username }}
+</td>
+<td>
+    {{ flag.reason|truncatechars:30 }}
+</td>
+<td>
+{% if flag.status == "PENDING" %}
+<span class="status pending">Pending</span>
+{% else %}
+<span class="status resolved">Resolved</span>
+{% endif %}
+</td>
+<td>
+<a href="{% url 'admin_flag_detail' flag.id %}"class="table-action">Review</a>
+</td>
+</tr>
+{% endfor %}
+</tbody>
+</table>
+</div>
+{% else %}
+<div class="empty-state">
+    <div>✓</div>
+    <h3>No reports found</h3>
+    <p>There are no flagged fares at the moment.</p>
+</div>
+{% endif %}
+</div>
+{% endblock %}

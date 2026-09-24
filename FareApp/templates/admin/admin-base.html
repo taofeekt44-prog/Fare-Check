@@ -1,0 +1,102 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Admin | FareCheck Nigeria{% endblock %}</title>
+    <link rel="stylesheet" href="{% static 'css/admin.css' %}">
+</head>
+<body>
+<div class="admin-layout">
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+    <aside class="admin-sidebar" id="adminSidebar">
+        <div class="sidebar-header">
+            <a href="{% url 'admin_dashboard' %}" class="admin-logo">
+                <span>₦</span>
+                FareCheck
+            </a>
+            <button class="close-sidebar" id="closeSidebar">×</button>
+        </div>
+
+        <div class="admin-label">
+            ADMIN PANEL
+        </div>
+
+        <nav class="admin-nav">
+            <a href="{% url 'admin_dashboard' %}"
+               class="nav-item {% block dashboard_active %}{% endblock %}">
+                <span class="nav-icon">⌂</span>
+                Dashboard
+            </a>
+
+            <a href="{% url 'admin_flags' %}"
+               class="nav-item {% block flags_active %}{% endblock %}">
+                <span class="nav-icon">⚑</span>
+                Flagged Fares
+            </a>
+
+            <a href="{% url 'admin_fares' %}"
+               class="nav-item {% block fares_active %}{% endblock %}">
+                <span class="nav-icon">₦</span>
+                Fare Reports
+            </a>
+
+            <a href="{% url 'admin_routes' %}"
+               class="nav-item {% block routes_active %}{% endblock %}">
+                <span class="nav-icon">⇄</span>
+                Routes
+            </a>
+
+            <a href="{% url 'admin_users' %}"
+               class="nav-item {% block users_active %}{% endblock %}">
+                <span class="nav-icon">♙</span>
+                Users
+            </a>
+        </nav>
+
+        <div class="sidebar-bottom">
+            <div class="admin-user">
+                <div class="admin-avatar">
+                    {{ request.user.username|first|upper }}
+                </div>
+
+                <div class="admin-user-info">
+                    <strong>{{ request.user.username }}</strong>
+                    <span>Administrator</span>
+                </div>
+            </div>
+
+            <a href="{% url 'user_logout' %}" class="logout-btn">
+                <span>↪</span>
+                Logout
+            </a>
+        </div>
+    </aside>
+    <div class="admin-main">
+        <header class="admin-topbar">
+            <button class="menu-btn" id="openSidebar">☰</button>
+            <div class="topbar-title">
+                <span>FareCheck Nigeria</span>
+                <strong>Administration</strong>
+            </div>
+
+            <div class="topbar-right">
+                <div class="admin-status">
+                    <span class="status-dot"></span>
+                    Admin
+                </div>
+            </div>
+        </header>
+        <main class="admin-content">
+            {% block content %}
+            {% endblock %}
+        </main>
+    </div>
+</div>
+<script src="{% static 'js/admin.js' %}"></script>
+{% block scripts %}
+{% endblock %}
+</body>
+</html>

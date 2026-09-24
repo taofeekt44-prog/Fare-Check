@@ -1,0 +1,189 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Flag Fare | FareCheck Nigeria</title>
+
+    <link rel="stylesheet" href="{% static 'css/flag-fare.css' %}">
+</head>
+
+<body>
+
+    <main class="flag-page">
+
+        <div class="flag-card">
+
+            <!-- Header -->
+            <div class="flag-header">
+
+                <div class="flag-icon">
+                    ⚑
+                </div>
+
+                <h1>Flag Fare</h1>
+
+                <p>
+                    Help us keep FareCheck accurate by reporting
+                    fares that may be incorrect or outdated.
+                </p>
+
+            </div>
+
+
+            <!-- Fare information -->
+            <div class="fare-info">
+
+                <h2>Fare you're reporting</h2>
+
+                <div class="route-name">
+                    {{ fare_submission.route.origin }}
+                    <span>→</span>
+                    {{ fare_submission.route.destination }}
+                </div>
+
+                <div class="fare-details">
+
+                    <div class="detail">
+                        <span>Transport</span>
+                        <strong>
+                            {{ fare_submission.get_transport_type_display }}
+                        </strong>
+                    </div>
+
+                    <div class="detail">
+                        <span>Fare</span>
+                        <strong>
+                            ₦{{ fare_submission.amount|floatformat:2 }}
+                        </strong>
+                    </div>
+
+                    <div class="detail">
+                        <span>Submitted</span>
+                        <strong>
+                            {{ fare_submission.created_at|date:"d M Y" }}
+                        </strong>
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- Flag form -->
+            <form method="POST"
+                  action=""
+                  id="flagForm"
+                  class="flag-form">
+
+                {% csrf_token %}
+
+                <div class="form-group">
+
+                    <label for="reason">
+                        Why are you flagging this fare?
+                    </label>
+
+                    <select name="reason"
+                            id="reason"
+                            required>
+
+                        <option value="">
+                            Select a reason
+                        </option>
+
+                        <option value="Incorrect fare">
+                            Incorrect fare
+                        </option>
+
+                        <option value="Outdated fare">
+                            Outdated fare
+                        </option>
+
+                        <option value="Suspicious fare">
+                            Suspicious fare
+                        </option>
+
+                        <option value="Duplicate submission">
+                            Duplicate submission
+                        </option>
+
+                        <option value="Other">
+                            Other
+                        </option>
+
+                    </select>
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label for="details">
+                        Additional details
+                        <span>(optional)</span>
+                    </label>
+
+                    <textarea
+                        name="details"
+                        id="details"
+                        rows="4"
+                        maxlength="200"
+                        placeholder="Tell us briefly why you think this fare should be reviewed..."
+                    ></textarea>
+
+                    <div class="character-count">
+                        <span id="characterCount">0</span>/200
+                    </div>
+
+                </div>
+
+
+                {% if error %}
+                    <div class="form-error">
+                        {{ error }}
+                    </div>
+                {% endif %}
+
+
+                <div class="warning-box">
+
+                    <span class="warning-icon">!</span>
+
+                    <p>
+                        Please only flag fares that you believe are
+                        inaccurate, outdated, or suspicious.
+                    </p>
+
+                </div>
+
+
+                <div class="form-actions">
+
+                    <a href="{% url 'route_detail' fare_submission.route.id %}"
+                       class="cancel-btn">
+                        Cancel
+                    </a>
+
+                    <button type="submit"
+                            id="flagButton"
+                            class="flag-btn">
+                        Submit Flag
+                    </button>
+
+                </div>
+
+            </form>
+
+        </div>
+
+    </main>
+
+
+    <script src="{% static 'js/flag-fare.js' %}"></script>
+
+</body>
+</html>

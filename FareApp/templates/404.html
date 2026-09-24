@@ -1,0 +1,72 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>Page Not Found | FareCheck Nigeria</title>
+
+    <link
+        rel="stylesheet"
+        href="{% static 'css/error.css' %}"
+    >
+
+</head>
+
+
+<body>
+
+    <main class="error-page">
+
+        <div class="error-card">
+
+            <div class="logo">
+                ₦ FareCheck
+            </div>
+
+            <div class="error-code">
+                404
+            </div>
+
+            <h1>
+                Page not found
+            </h1>
+
+            <p>
+                Sorry, the page you're looking for doesn't
+                exist or may have been moved.
+            </p>
+
+            <a
+                href="{% url 'user_dashboard' %}"
+                class="error-button"
+            >
+                Back to Dashboard
+            </a>
+
+            <a
+                href="javascript:history.back()"
+                class="error-link"
+            >
+                Go back
+            </a>
+
+            <div class="error-footer">
+                FareCheck Nigeria
+            </div>
+
+        </div>
+
+    </main>
+
+</body>
+
+</html>

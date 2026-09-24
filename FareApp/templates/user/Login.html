@@ -1,0 +1,93 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login | FareCheck Nigeria</title>
+    <link rel="stylesheet" href="{% static 'css/auth.css' %}">
+</head>
+<body>
+    <main class="auth-container">
+        <!-- LEFT SIDE -->
+        <section class="auth-info">
+            <div class="logo"><span>₦</span>FareCheck</div>
+            <div class="info-content">
+                <p class="tag">TRANSPORT FARE TRACKER</p>
+                <h1>Know the fare<span>before you travel.</span></h1>
+                <p>Check recent transport fares submitted by commutersacross Nigerian routes.</p>
+                <div class="features">
+                    <div>
+                        <strong>01</strong>
+                        <span>Compare recent fares</span>
+                    </div>
+
+                    <div>
+                        <strong>02</strong>
+                        <span>Find routes easily</span>
+                    </div>
+
+                    <div>
+                        <strong>03</strong>
+                        <span>Help keep fares accurate</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+
+        <!-- RIGHT SIDE -->
+        <section class="auth-form-section">
+            <div class="form-wrapper">
+                <div class="mobile-logo">
+                    <span>₦</span>
+                    FareCheck
+                </div>
+                <p class="form-small-title">WELCOME BACK</p>
+                <h2>Login to your account</h2>
+                <p class="form-description">
+                    Enter your details to continue.
+                </p>
+                {% if error %}
+                    <p style="color: #b3372c; text-align :center; font-size :13px; margin: 0 0 16px">{{ error }}</p>
+                {% endif %}
+                <form id="loginForm" method="post" action="">
+                    {% csrf_token %}
+                    <div class="input-group">
+                        <label for="email">Email address</label>
+                        <input type="email"id="email" name = "email" placeholder="you@example.com"required>
+                        <small class="error" id="emailError"></small>
+                    </div>
+
+                    <div class="input-group">
+                        <div class="label-row">
+                            <label for="password">Password</label>
+                            <a href="#">Forgot password?</a>
+                        </div>
+                        <div class="password-box">
+                            <input type="password"id="password" name = "password" placeholder="Enter your password"required>
+                            <button type="button"class="show-password"onclick="togglePassword('password', this)">Show</button>
+                        </div>
+                        <small class="error" id="passwordError"></small>
+                    </div>
+
+                    <label class="remember">
+                        <input type="checkbox">
+                        <span>Remember me</span>
+                    </label>
+
+                    <button type="submit" class="submit-btn">Login</button>
+                </form>
+
+
+                <div class="divider">
+                    <span>OR</span>
+                </div>
+
+                <p class="switch-page">Don't have an account?<a href="{% url 'register' %}">Create account</a></p>
+            </div>
+        </section>
+    </main>
+    <script src="{% static 'js/app.js' %}" defer></script>
+</body>
+</html>

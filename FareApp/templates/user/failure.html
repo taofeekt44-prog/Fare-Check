@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Flag Failed | FareCheck Nigeria</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/flag-status.css' %}">
+</head>
+
+<body>
+
+    <main class="status-page">
+
+        <div class="status-card">
+
+            <div class="status-icon failure">
+                !
+            </div>
+
+            <span class="status-label">SUBMISSION FAILED</span>
+
+            <h1>We Couldn't Submit Your Flag</h1>
+
+            <p>
+                Something went wrong while submitting your report.
+                Please try again.
+            </p>
+
+            <a href="javascript:history.back()" class="status-btn">
+                Try Again
+            </a>
+
+            <a href="{% url 'user_dashboard' %}" class="secondary-btn">
+                Back to Dashboard
+            </a>
+
+        </div>
+
+    </main>
+
+</body>
+</html>

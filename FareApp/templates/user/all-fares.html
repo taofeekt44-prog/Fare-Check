@@ -1,0 +1,162 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"content="width=device-width, initial-scale=1.0">
+    <title>All Fares | FareCheck</title>
+    <link rel="stylesheet"href="{% static 'css/all-fares.css' %}">
+</head>
+<body>
+<header class="navbar">
+    <div class="logo">
+        <div class="logo-icon">₦</div>
+        <span>Fare<span>Check</span></span>
+    </div>
+    <nav>
+        <a href="{% url 'user_dashboard' %}">Home</a>
+        <a href="{% url 'user_search' %}">Search Fares</a>
+        <a href="{% url 'user_fare' %}">My Fares</a>
+        <a href="{% url "profile" %}">Profile</a>
+        <a href="{% url 'user_logout' %}">Logout</a>
+    </nav>
+</header>
+
+<main class="page-container">
+    <section class="page-header">
+        <div>
+            <span class="eyebrow">COMMUNITY FARES</span>
+            <h1>All Fare Reports</h1>
+            <p>See fare submissions from commuters acrossall available routes.</p>
+        </div>
+
+        <a href="{% url 'submit-fare' %}"class="submit-button">+ Submit a Fare</a>
+    </section>
+
+    <section class="search-section">
+        <div class="search-wrapper">
+            <span class="search-icon">⌕</span>
+            <input type="text"id="fareSearch"placeholder="Search by route, transport type or contributor...">
+        </div>
+
+        <select id="transportFilter">
+            <option value="all">All Transport</option>
+            <option value="bus">Bus</option>
+            <option value="keke">Keke</option>
+            <option value="taxi">Taxi</option>
+        </select>
+    </section>
+
+    <section class="summary">
+        <div class="summary-card">
+            <span class="summary-label">TOTAL FARE REPORTS</span>
+            <strong>{{ fares|length }}</strong>
+        </div>
+        <div class="summary-card">
+            <span class="summary-label">AVAILABLE ROUTES</span>
+            <strong id="routeCount">-</strong>
+        </div>
+    </section>
+
+    <section class="fares-section">
+        <div class="section-heading">
+            <div>
+                <span class="eyebrow">LATEST SUBMISSIONS</span>
+                <h2>Fare Reports</h2>
+            </div>
+            <span id="resultCount"class="result-count">{{ fares|length }} reports</span>
+        </div>
+
+        <div class="fare-list"id="fareList">
+            {% for fare in fares %}
+            <article class="fare-card"
+                data-search="
+                    {{ fare.route.origin|lower }}
+                    {{ fare.route.destination|lower }}
+                    {{ fare.get_transport_type_display|lower }}
+                    {{ fare.user.username|lower }}
+                "
+                data-transport="{{ fare.transport_type|lower }}"
+            >
+
+                <div class="route-area">
+                    <span class="card-label">ROUTE</span>
+                    <h3>
+                        {{ fare.route.origin }}
+                        <span class="route-arrow">→</span>
+                        {{ fare.route.destination }}
+                    </h3>
+                </div>
+
+                <div class="price-area">
+                    <span class="card-label">FARE PAID</span>
+                    <strong>
+                        ₦{{ fare.amount|floatformat:2 }}
+                    </strong>
+                </div>
+
+                <div class="fare-details">
+                    <div class="detail">
+                        <span>Transport</span>
+                        <strong>
+                            {{ fare.get_transport_type_display }}
+                        </strong>
+                    </div>
+
+                    <div class="detail">
+                        <span>Time of Day</span>
+                        <strong>
+                            {% if fare.time_of_day %}
+                                {{ fare.get_time_of_day_display }}
+                            {% else %}
+                                Not specified
+                            {% endif %}
+                        </strong>
+                    </div>
+
+                    <div class="detail">
+                        <span>Submitted</span>
+                        <strong>
+                            {{ fare.created_at|date:"d M Y" }}
+                        </strong>
+                    </div>
+                </div>
+
+                <div class="fare-footer">
+                    <div class="contributor">
+                        <div class="avatar">
+                            {{ fare.user.username|first|upper }}
+                        </div>
+                        <div>
+                            <span>Submitted by</span>
+                            <strong>
+                                {{ fare.user.username }}
+                            </strong>
+                        </div>
+                    </div>
+
+                    <a href="{% url 'route_detail' fare.route.id %}"class="route-button">View Route →</a>
+                </div>
+            </article>
+            {% empty %}
+
+            <div class="empty-state">
+                <div class="empty-icon">₦</div>
+                <h2>No fares submitted yet</h2>
+                <p>There are currently no fare reports in the database.</p>
+                <a href="{% url 'submit_fare' %}">Submit the first fare</a>
+            </div>
+
+            {% endfor %}
+        </div>
+
+        <div id="noResults"class="no-results">
+            <h3>No matching fares</h3>
+            <p>Try another route, contributor or transport type.</p>
+        </div>
+    </section>
+</main>
+<script src="{% static 'js/all-fares.js' %}"></script>
+</body>
+</html>

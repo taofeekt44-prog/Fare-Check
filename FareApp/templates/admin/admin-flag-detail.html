@@ -1,0 +1,118 @@
+{% extends "admin/admin-base.html" %}
+{% block title %}
+Review Flag | FareCheck Nigeria
+{% endblock %}
+{% block flags_active %}
+active
+{% endblock %}
+{% block content %}
+<div class="back-link">
+    <a href="{% url 'admin_flags' %}">← Back to flagged fares</a>
+</div>
+
+<div class="page-header">
+    <div>
+        <span class="page-eyebrow">FARE REVIEW</span>
+        <h1>Flagged Fare</h1>
+        <p>Review the information reported by the contributor.</p>
+    </div>
+</div>
+
+<div class="review-layout">
+    <section class="review-card">
+        <div class="review-card-header">
+            <div>
+                <span class="section-label">FARE INFORMATION</span>
+                <h2>
+                    {{ flag.fare_submission.route.origin }}
+                    →
+                    {{ flag.fare_submission.route.destination }}
+                </h2>
+            </div>
+            {% if flag.status == "PENDING" %}
+                <span class="status pending">Pending</span>
+            {% else %}
+                <span class="status resolved">Resolved</span>
+            {% endif %}
+        </div>
+
+        <div class="fare-amount">
+            <span>Submitted fare</span>
+            <strong>
+                ₦{{ flag.fare_submission.amount|floatformat:2 }}
+            </strong>
+        </div>
+
+        <div class="detail-grid">
+            <div class="detail-item">
+                <span>Transport</span>
+                <strong>
+                    {{ flag.fare_submission.get_transport_type_display }}
+                </strong>
+            </div>
+
+            <div class="detail-item">
+                <span>Time of day</span>
+                <strong>
+                    {% if flag.fare_submission.time_of_day %}
+                        {{ flag.fare_submission.get_time_of_day_display }}
+                    {% else %}
+                        Not provided
+                    {% endif %}
+                </strong>
+            </div>
+
+            <div class="detail-item">
+                <span>Submitted by</span>
+                <strong>
+                    {{ flag.fare_submission.user.username }}
+                </strong>
+            </div>
+
+            <div class="detail-item">
+                <span>Submitted</span>
+                <strong>
+                    {{ flag.fare_submission.created_at|date:"d M Y, H:i" }}
+                </strong>
+            </div>
+        </div>
+    </section>
+
+    <section class="review-card">
+        <div class="review-card-header">
+            <div>
+                <span class="section-label">REPORT</span>
+                <h2>Why was this fare flagged?</h2>
+            </div>
+        </div>
+
+        <div class="reason-box">
+            {{ flag.reason }}
+        </div>
+        <div class="reporter-info">
+            <div class="admin-avatar large">
+                {{ flag.user.username|first|upper }}
+            </div>
+            <div>
+
+                <span>Reported by</span>
+                <strong>
+                    {{ flag.user.username }}
+                </strong>
+            </div>
+        </div>
+
+        {% if flag.status == "PENDING" %}
+        <form method="POST"action="{% url 'resolve_flag' flag.id %}"class="resolve-form">
+            {% csrf_token %}
+            <button type="submit"class="resolve-btn">✓ Mark as Resolved</button>
+        </form>
+        {% else %}
+        <div class="resolved-message">
+            <span>✓</span>
+            This report has already been resolved.
+        </div>
+        {% endif %}
+    </section>
+</div>
+{% endblock %}

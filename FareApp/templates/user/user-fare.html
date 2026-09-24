@@ -1,0 +1,182 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Fares | FareCheck Nigeria</title>
+    <link rel="stylesheet" href="{% static 'css/user-fare.css' %}">
+</head>
+<body>
+    <header class="navbar">
+        <div class="nav-container">
+            <a href="{% url 'user_dashboard' %}" class="logo">
+                <span class="logo-icon">₦</span>
+                <span>
+                    Fare<span>Check</span>
+                </span>
+            </a>
+            <nav class="desktop-nav">
+                <a href="{% url 'user_dashboard' %}">Home</a>
+                <a href="{% url 'user_search' %}">Search Fares</a>
+                <a href="{% url 'user_fare' %}" class="active">My Fares</a>
+                <a href="{% url 'profile' %}">Profile</a>
+            </nav>
+            <div class="user-section">
+                <div class="user-avatar">
+                    {% if request.user.profile.profile_picture %}
+                        <img src="{{ request.user.profile.profile_picture.url }}"alt="Profile picture">
+                    {% else %}
+                        {{ request.user.username|first|upper }}
+                    {% endif %}
+                </div>
+
+                <div class="user-info">
+                    <strong>
+                        {{ request.user.username }}
+                    </strong>
+                    <span>Contributor</span>
+                </div>
+                <a href="{% url 'user_logout' %}"class="logout-btn">Logout</a>
+            </div>
+
+            <button type="button"class="mobile-menu-btn"id="mobileMenuBtn">☰</button>
+        </div>
+
+        <div class="mobile-menu" id="mobileMenu">
+            <a href="{% url 'user_dashboard' %}">Home</a>
+            <a href="{% url 'user_search' %}">Search Fares</a>
+            <a href="{% url 'user_fare' %}" class="active">My Fares</a>
+            <a href="{% url 'profile' %}">Profile</a>
+            <a href="{% url 'user_logout' %}">Logout</a>
+        </div>
+    </header>
+
+    <main class="page-container">
+        <section class="page-header">
+            <div>
+                <span class="section-label">YOUR CONTRIBUTIONS</span>
+                <h1>My Fares</h1>
+                <p>View the transport fares you have submitted to FareCheck.</p>
+            </div>
+            <a href="{% url 'submit-fare' %}"class="submit-btn">
+                <span>＋</span>
+                Submit a Fare
+            </a>
+        </section>
+
+        <section class="summary-card">
+            <div class="summary-icon">₦</div>
+            <div class="summary-content">
+                <span>TOTAL SUBMISSIONS</span>
+                <strong>
+                    {{ fares|length }}
+                </strong>
+                <p>Fares you have contributed</p>
+            </div>
+        </section>
+
+        <section class="filters-section">
+            <div class="search-box">
+                <span class="search-icon">🔍</span>
+                <input type="text"id="fareSearch"placeholder="Search by route...">
+            </div>
+
+            <select id="transportFilter">
+                <option value="ALL">All Transport</option>
+                <option value="BUS">Bus</option>
+                <option value="KEKE">Keke</option>
+                <option value="TAXI">Taxi</option>
+            </select>
+        </section>
+
+        <section class="fares-section">
+            <div class="section-heading">
+                <div>
+                    <span class="section-label">RECENT ACTIVITY</span>
+                    <h2>Your Submitted Fares</h2>
+                </div>
+                <span class="fare-count"id="fareCount">
+                    {{ fares|length }} submissions
+                </span>
+            </div>
+            <div class="fare-list"id="fareList">
+                {% for fare in fares %}
+                    <article
+                        class="fare-card"
+                        data-transport="{{ fare.transport_type }}"
+                        data-route="{{ fare.route.origin|lower }} {{ fare.route.destination|lower }}"
+                    >
+                        <div class="fare-route">
+                            <div class="location-dot"></div>
+                            <div>
+                                <span class="route-label"> ROUTE</span>
+                                <h3>
+                                    {{ fare.route.origin }}
+                                    <span>→</span>
+                                    {{ fare.route.destination }}
+                                </h3>
+                            </div>
+                        </div>
+                        <div class="fare-details">
+                            <div class="detail">
+                                <span class="detail-label">TRANSPORT</span>
+                                <strong>
+                                    {% if fare.transport_type == "BUS" %}
+                                        🚌 Bus
+                                    {% elif fare.transport_type == "KEKE" %}
+                                        🛺 Keke
+                                    {% elif fare.transport_type == "TAXI" %}
+                                        🚕 Taxi
+                                    {% else %}
+                                        {{ fare.get_transport_type_display }}
+                                    {% endif %}
+                                </strong>
+                            </div>
+
+                            <div class="detail">
+                                <span class="detail-label">FARE PAID</span>
+                                <strong class="fare-amount">
+                                    ₦{{ fare.amount|floatformat:2 }}
+                                </strong>
+                            </div>
+
+                            <div class="detail">
+                                <span class="detail-label">TIME</span>
+                                <strong>
+                                    {% if fare.time_of_day %}
+                                        {{ fare.get_time_of_day_display }}
+                                    {% else %}
+                                        Not specified
+                                    {% endif %}
+                                </strong>
+                            </div>
+
+                            <div class="detail">
+                                <span class="detail-label">SUBMITTED</span>
+                                <strong>
+                                    {{ fare.created_at|date:"d M Y" }}
+                                </strong>
+                            </div>
+                        </div>
+                    </article>
+                {% empty %}
+                    <div class="empty-state"id="emptyState">
+                        <div class="empty-icon">₦</div>
+                        <h3>No fares submitted yet</h3>
+                        <p>You haven't contributed any transport fares.Submit your first fare and help other commuters.</p>
+                        <a href="{% url 'submit-fare' %}"class="empty-btn">Submit Your First Fare</a>
+                    </div>
+                {% endfor %}
+
+                <div class="no-results"id="noResults"style="display: none;">
+                    <div class="no-results-icon">🔍</div>
+                    <h3>No fares found</h3>
+                    <p>Try a different route or transport type.</p>
+                </div>
+            </div>
+        </section>
+    </main>
+    <script src="{% static 'js/user-fare.js' %}"></script>
+</body>
+</html>

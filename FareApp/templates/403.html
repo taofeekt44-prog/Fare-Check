@@ -1,0 +1,73 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>Access Denied | FareCheck Nigeria</title>
+
+    <link
+        rel="stylesheet"
+        href="{% static 'css/error.css' %}"
+    >
+
+</head>
+
+
+<body>
+
+    <main class="error-page">
+
+        <div class="error-card">
+
+            <div class="logo">
+                ₦ FareCheck
+            </div>
+
+            <div class="error-code">
+                403
+            </div>
+
+            <h1>
+                Access denied
+            </h1>
+
+            <p>
+                You don't have permission to access this page.
+                Please make sure you're logged in with the
+                correct account.
+            </p>
+
+            <a
+                href="{% url 'user_dashboard' %}"
+                class="error-button"
+            >
+                Back to Dashboard
+            </a>
+
+            <a
+                href="{% url 'user_login' %}"
+                class="error-link"
+            >
+                Go to Login
+            </a>
+
+            <div class="error-footer">
+                FareCheck Nigeria
+            </div>
+
+        </div>
+
+    </main>
+
+</body>
+
+</html>

@@ -1,0 +1,161 @@
+{% extends "admin/admin-base.html" %}
+{% block title %}
+Admin Dashboard | FareCheck Nigeria
+{% endblock %}
+{% block dashboard_active %}
+active
+{% endblock %}
+{% block content %}
+<div class="page-header">
+    <div>
+        <span class="page-eyebrow">ADMINISTRATION</span>
+        <h1>Dashboard</h1>
+        <p>Monitor FareCheck activity and review submitted fare information.</p>
+    </div>
+</div>
+
+<div class="stats-grid">
+    <div class="stat-card">
+        <div class="stat-icon fare-icon">₦</div>
+        <div>
+            <span>Total Fares</span>
+            <strong>{{ total_fares }}</strong>
+        </div>
+    </div>
+
+    <div class="stat-card">
+        <div class="stat-icon flag-icon">⚑</div>
+        <div>
+            <span>Pending Flags</span>
+            <strong>{{ pending_flags }}</strong>
+        </div>
+    </div>
+
+    <div class="stat-card">
+        <div class="stat-icon route-icon">⇄</div>
+        <div>
+            <span>Total Routes</span>
+            <strong>{{ total_routes }}</strong>
+        </div>
+    </div>
+
+    <div class="stat-card">
+        <div class="stat-icon user-icon">♙</div>
+        <div>
+            <span>Registered Users</span>
+            <strong>{{ total_users }}</strong>
+        </div>
+    </div>
+</div>
+
+<section class="dashboard-section">
+    <div class="section-heading">
+        <div>
+            <span class="section-label">MANAGEMENT</span>
+            <h2>Quick access</h2>
+        </div>
+    </div>
+
+    <div class="quick-grid">
+        <a href="{% url 'admin_flags' %}" class="quick-card">
+            <div class="quick-icon">⚑</div>
+            <div>
+                <h3>Review Flags</h3>
+                <p>Check fares reported by commuters.</p>
+            </div>
+            <span class="arrow">→</span>
+        </a>
+
+        <a href="{% url 'admin_fares' %}" class="quick-card">
+            <div class="quick-icon">₦</div>
+            <div>
+                <h3>Fare Reports</h3>
+                <p>View submitted fares.</p>
+            </div>
+            <span class="arrow">→</span>
+        </a>
+
+        <a href="{% url 'admin_routes' %}" class="quick-card">
+            <div class="quick-icon">⇄</div>
+            <div>
+                <h3>Routes</h3>
+                <p>Browse registered routes.</p>
+            </div>
+            <span class="arrow">→</span>
+        </a>
+
+        <a href="{% url 'admin_users' %}" class="quick-card">
+            <div class="quick-icon">♙</div>
+            <div>
+                <h3>Users</h3>
+                <p>View registered contributors.</p>
+            </div>
+            <span class="arrow">→</span>
+        </a>
+    </div>
+</section>
+
+<section class="dashboard-section">
+    <div class="section-heading">
+        <div>
+            <span class="section-label">RECENT ACTIVITY</span>
+            <h2>Recent flagged fares</h2>
+        </div>
+        <a href="{% url 'admin_flags' %}" class="view-all">View all →</a>
+    </div>
+
+    <div class="table-card">
+        {% if recent_flags %}
+        <div class="table-wrapper">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Route</th>
+                        <th>Fare</th>
+                        <th>Reason</th>
+                        <th>Status</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                {% for flag in recent_flags %}
+                    <tr>
+                        <td>
+                            <strong>
+                                {{ flag.fare_submission.route.origin }}
+                            </strong>
+                            <span class="table-sub">
+                                → {{ flag.fare_submission.route.destination }}
+                            </span>
+                        </td>
+                        <td>
+                            ₦{{ flag.fare_submission.amount|floatformat:2 }}
+                        </td>
+                        <td>
+                            {{ flag.reason|truncatechars:35 }}
+                        </td>
+                        <td>
+                            {% if flag.status == "PENDING" %}
+                                <span class="status pending">Pending</span>
+                            {% else %}
+                                <span class="status resolved">Resolved</span>
+                            {% endif %}
+                        </td>
+                        <td>
+                            <a href="{% url 'admin_flag_detail' flag.id %}"class="table-action">Review</a>
+                        </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% else %}
+            <div class="empty-state">
+                <div>✓</div>
+                <h3>No flagged fares</h3>
+                <p>There are currently no reports to review.</p>
+            </div>
+        {% endif %}
+    </div>
+</section>
+{% endblock %}

@@ -1,0 +1,51 @@
+{% extends "admin/admin-base.html" %}
+{% block title %}
+Routes | FareCheck Nigeria
+{% endblock %}
+{% block routes_active %}
+active
+{% endblock %}
+{% block content %}
+<div class="page-header">
+    <div>
+        <span class="page-eyebrow">ROUTES</span>
+        <h1>Routes</h1>
+        <p>Browse routes currently available on FareCheck.</p>
+    </div>
+</div>
+
+<div class="info-banner">
+    <span>🔒</span>
+    <p>Routes are displayed for monitoring only.</p>
+</div>
+
+<div class="route-grid">
+{% for route in routes %}
+<div class="route-card">
+    <div class="route-icon">
+        ⇄
+    </div>
+
+    <div class="route-info">
+        <span>ORIGIN</span>
+        <strong>
+            {{ route.origin }}
+        </strong>
+        <div class="route-line">
+            ↓
+        </div>
+        <span>DESTINATION</span>
+        <strong>
+            {{ route.destination }}
+        </strong>
+    </div>
+</div>
+{% empty %}
+<div class="empty-state">
+    <div>⇄</div>
+    <h3>No routes found</h3>
+    <p>No routes have been submitted yet.</p>
+</div>
+{% endfor %}
+</div>
+{% endblock %}

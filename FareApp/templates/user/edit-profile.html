@@ -1,0 +1,151 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"content="width=device-width, initial-scale=1.0">
+    <title>Edit Profile | FareCheck Nigeria</title>
+    <link rel="stylesheet"href="{% static 'css/profile.css' %}">
+</head>
+<body>
+    <main class="edit-page">
+        <div class="edit-container">
+            <div class="edit-header">
+                <a href="{% url 'profile' %}"class="back-link">← Back to Profile</a>
+                <span class="profile-label">ACCOUNT SETTINGS</span>
+                <h1>Edit Your Profile</h1>
+                <p>Keep your contributor information up to date.</p>
+            </div>
+            
+            <form method="POST"action=""enctype="multipart/form-data"id="profileForm"class="edit-card">
+                {% csrf_token %}
+                <section class="edit-section">
+                    <div class="section-title">
+                        <h2>Profile Picture</h2>
+                        <p>Add a picture so other contributors can recognize your profile.</p>
+                    </div>
+                    <div class="picture-editor">
+                        <div>
+                            {% if profile.profile_picture %}
+                                <img
+                                    src="{{ profile.profile_picture.url }}"
+                                    alt="Profile picture"
+                                    id="profilePreview"
+                                    class="edit-profile-picture"
+                                >
+                            {% else %}
+                                <div id="profilePlaceholder"class="edit-profile-placeholder">
+                                    {{ user.username|first|upper }}
+                                </div>
+                                <img
+                                    id="profilePreview"
+                                    class="edit-profile-picture hidden"
+                                    alt="Profile preview"
+                                >
+                            {% endif %}
+                        </div>
+                        <div class="picture-controls">
+                            <label for="profile_picture"class="upload-btn">Choose Picture</label>
+                            <input type="file"name="profile_picture"id="profile_picture"accept="image/*"hidden>
+                            <p>JPG, PNG or WEBP.Maximum recommended size: 2MB.</p>
+                        </div>
+                    </div>
+                </section>
+
+                <section class="edit-section">
+                    <div class="section-title">
+                        <h2>Personal Information</h2>
+                        <p>Update the information connected to your FareCheck account.</p>
+                    </div>
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label for="first_name">First Name</label>
+                            <input
+                                type="text"
+                                name="first_name"
+                                id="first_name"
+                                value="{{ user.first_name }}"
+                                placeholder="Enter your first name"
+                            >
+                        </div>
+
+                        <div class="form-group">
+                            <label for="last_name">Last Name</label>
+                            <input
+                                type="text"
+                                name="last_name"
+                                id="last_name"
+                                value="{{ user.last_name }}"
+                                placeholder="Enter your last name"
+                            >
+                        </div>
+                        <div class="form-group">
+                            <label for="username">Username</label>
+                            <input
+                                type="text"
+                                name="username"
+                                id="username"
+                                value="{{ user.username }}"
+                                required
+                            >
+                        </div>
+                        <div class="form-group">
+                            <label for="email">Email Address</label>
+                            <input
+                                type="email"
+                                name="email"
+                                id="email"
+                                value="{{ user.email }}"
+                                required
+                            >
+                        </div>
+                        <div class="form-group full-width">
+                            <label for="phone_number">Phone Number
+                                <span>(optional)</span>
+                            </label>
+                            <input
+                                type="tel"
+                                name="phone_number"
+                                id="phone_number"
+                                value="{{ profile.phone_number }}"
+                                placeholder="e.g. 08012345678"
+                            >
+                        </div>
+
+                        <div class="form-group full-width">
+                            <label for="bio">About You
+                                <span>(optional)</span>
+                            </label>
+                            <textarea
+                                name="bio"
+                                id="bio"
+                                maxlength="300"
+                                rows="5"
+                                placeholder="Tell the FareCheck community a little about yourself..."
+                            >{{ profile.bio }}</textarea>
+                            <div class="bio-counter">
+                                <span id="bioCount">0</span>/300
+                            </div>
+                        </div>
+                    </div>
+                </section>
+                {% if error %}
+                    <div class="form-error">
+                        {{ error }}
+                    </div>
+                {% endif %}
+                {% if success %}
+                    <div class="form-success">
+                        {{ success }}
+                    </div>
+                {% endif %}
+                <div class="form-actions">
+                    <a href="{% url 'profile' %}"class="cancel-btn">Cancel</a>
+                    <button type="submit"id="saveButton"class="save-btn">Save Changes</button>
+                </div>
+            </form>
+        </div>
+    </main>
+    <script src="{% static 'js/profile.js' %}"></script>
+</body>
+</html>
